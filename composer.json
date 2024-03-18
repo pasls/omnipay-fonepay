@@ -1,7 +1,7 @@
 {
     "name": "pasls/omnipay-fonepay",
     "type": "library",
-    "licence": "MIT",
+    "license": "MIT",
     "require": {
         "omnipay/common": "^3.0",
         "guzzlehttp/guzzle": "^6.3.3"
