@@ -1,0 +1,24 @@
+{
+    "name": "pasls/omnipay-fonepay",
+    "type": "library",
+    "require": {
+        "omnipay/common": "^3.0",
+        "guzzlehttp/guzzle": "^6.3.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pasls\\OmnipayFonepay\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rajesh",
+            "email": "broncha@vantagebit.com"
+        }
+    ],
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": false
+        }
+    }
+}
