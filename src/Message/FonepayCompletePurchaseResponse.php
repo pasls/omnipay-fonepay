@@ -7,7 +7,7 @@ use Omnipay\Common\Message\RequestInterface;
 
 class FonepayCompletePurchaseResponse extends AbstractResponse
 {
-    public function __construct(RequestInterface $request, $data, private $verificationResponse)
+    public function __construct(RequestInterface $request, $data)
     {
         parent::__construct($request, $data);
     }
@@ -25,7 +25,7 @@ class FonepayCompletePurchaseResponse extends AbstractResponse
      */
     public function isSuccessful()
     {
-        return $this->verificationResponse->success == "true";
+        return $this->data['status'] == true;
     }
 
     /**
@@ -33,7 +33,7 @@ class FonepayCompletePurchaseResponse extends AbstractResponse
      */
     public function getTransactionReference()
     {
-        return $this->data['UID'];
+        return $this->getPurchaseResponse()['UID'];
     }
 
     /**

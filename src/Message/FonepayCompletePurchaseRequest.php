@@ -24,35 +24,31 @@ class FonepayCompletePurchaseRequest extends AbstractFonepayRequest
             'RU'   =>  $this->getReturnUrl(),
             'UID'   =>  $data['UID'],
             'DV'   =>  hash_hmac("sha512",join(",", [
-                $this->getServiceCode(),
-                $this->getAmount(),
                 $data['PRN'],
-                $data['BID'] ?? '',
+                $this->getServiceCode(),
+                $data['PS'],
+                $data['RC'],
                 $data['UID'],
+                $data['BC'],
+                $data['INI'],
+                $data['P_AMT'],
+                $data['R_AMT'],
             ]) , $this->getSecretKey())
         ];
 
-        try{
-            $response = $this->httpClient->request('GET', $this->getVerifyEndpoint()."?".http_build_query($query));
-            $raw = $response->getBody()->getContents();
-            $data['purchaseResponse'] = (string) $raw;
-            $data['xml'] = new \SimpleXMLElement($response->getBody());
-        }catch(RequestException $e)
-        {
-            if ($e->hasResponse()) {
-                $response = (string) $e->getResponse()->getBody()->getContents();
-                $data['purchaseResponse'] = $response;
-            }else{
-                $data['purchaseResponse'] = $e->getMessage();
-            }
-
-            $data['xml'] = new \SimpleXMLElement("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><response><success>false</success></response>");
+        if(strtoupper($query['DV']) == $data['DV']){
+            return [
+                'status' => true,
+                'purchaseRequest' => $query,
+                'purchaseResponse' => $data
+            ];
         }
 
-        $data['purchaseRequest'] = $query;
-
-        return $data;
-
+        return [
+            'status' => false,
+            'purchaseRequest' => $query,
+            'purchaseResponse' => $data
+        ];
     }
 
     /**
@@ -60,9 +56,9 @@ class FonepayCompletePurchaseRequest extends AbstractFonepayRequest
      */
     public function sendData($data)
     {
-        $data = array_merge($data,$this->verifyPayment($data));
+        $response =  $this->verifyPayment($data);
 
-        return $this->response = new FonepayCompletePurchaseResponse($this, $data, $data['xml']);
+        return $this->response = new FonepayCompletePurchaseResponse($this, $response);
     }
 
 }
