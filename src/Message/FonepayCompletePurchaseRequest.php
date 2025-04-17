@@ -36,7 +36,7 @@ class FonepayCompletePurchaseRequest extends AbstractFonepayRequest
             ]) , $this->getSecretKey())
         ];
 
-        if(strtoupper($query['DV']) == $data['DV']){
+        if(strtoupper($query['DV']) == $data['DV'] && $data['RC'] == 'successful'){
             return [
                 'status' => true,
                 'purchaseRequest' => $query,
